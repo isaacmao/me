@@ -21,6 +21,7 @@
 		s.start()			# listening to all dendrites
  		target = ("",23304)		# prepare target for spike
 		s.axonFire("some messages", target)	# fire!
+		print s.vesicle 		# read the current message neuron receives from others
 
 """
 
@@ -73,5 +74,7 @@ class Neuron():
 	def start(self):   
 		denthread = Thread(target=self.dendrites)
 		denthread.start()
+	def close(self):
+		denthread.close()
 
 	

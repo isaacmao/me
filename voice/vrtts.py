@@ -1,4 +1,6 @@
+
 import sys		#for cmd line argv
+sys.path.insert(0,'../lib')
 import time		#for delay
 from pygsr import Pygsr
 import re
@@ -8,6 +10,7 @@ pygst.require('0.10')
 import gst
 import gobject
 import os
+import neuron
 
 def playmp3(file):
 
@@ -69,10 +72,17 @@ def ttsout(lang, text):
 
 if __name__ == "__main__":
     	speech = Pygsr()
+	s_neuron = neuron.Neuron(("",23310))
+	s_neuron.start()
+
 	while True:
+		if s_neuron.vesicle == "stopspeech":
+			sys.exit(-1)
+
 		speech.record(5) # duration in seconds (3)
 		try:
 			phrase, complete_response = speech.speech_to_text('en_US') # select the language
+			s_neuron.axonFire("",("",23301))
 		except urllib2.HTTPError, error:
 			phrase= "eh?"			
 			pass		

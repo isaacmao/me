@@ -23,13 +23,15 @@
 # PyGtalkRobot Homepage: http://code.google.com/p/pygtalkrobot/
 # RaspiBot Homepage: http://code.google.com/p/pygtalkrobot/
 #
+import sys
+sys.path.insert(0,'../lib')
 import time
 import subprocess
 from subprocess import Popen
 from PyXMPPRobot import XMPPRobot	
 import feedparser
 from threading import Thread
-
+from neuron import Neuron
 
 BOT_XMPP_USER = 'littlepi@jabber.org'
 BOT_XMPP_PASS = 'Dorisaac'
@@ -37,7 +39,6 @@ BOT_ADMIN = 'isaac.mao@gmail.com'
 
 
 
-#GPIO.setmode(GPIO.BOARD) # or GPIO.setmode(GPIO.BCM)
 ############################################################################################################################
 
 class RaspiBot(XMPPRobot):
@@ -53,7 +54,9 @@ class RaspiBot(XMPPRobot):
     #"command_" is the command prefix, "001" is the priviledge num, "setState" is the method name.
     #This method is used to change the state and status text of the bot.
 
-
+    def startNeuron(self,address):
+	self.neuron = Neuron(address)
+	
 	
     def command_001_setState(self, user, message, args):
         #the __doc__ of the function is the Regular Expression of this command, if matched, this command method will be called. 
@@ -162,7 +165,12 @@ class RaspiBot(XMPPRobot):
     def command_008_quit(self, user, message, args):
 	"""quit"""
 	sys.exit(-1)
-	
+    
+    def command_009_stopspeech(self, user, message, args):
+	"""stopspeech"""
+	target = ("",23310)		# prepare target for spike
+	self.neuron.axonFire("stopspeech", target)		# fire to raspberry remotely
+		
 
     #This method is the default response
     def command_100_default(self, user, message, args):
@@ -185,7 +193,7 @@ class RaspiBot(XMPPRobot):
 if __name__ == "__main__":
     bot = RaspiBot()
     bot.setState('available', "Raspi Gtalk Robot")
-    bot.startNeuron(23301)
+    bot.startNeuron(("",23301))	
     bot.start(BOT_XMPP_USER , BOT_XMPP_PASS)
 
     

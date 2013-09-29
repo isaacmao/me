@@ -25,7 +25,7 @@ import xmpp
 import urllib
 import re
 import inspect
-from neuron import Neuron
+
 
 """A simple jabber/xmpp bot framework
 
@@ -180,10 +180,6 @@ class XMPPRobot:
         self.server_host = server_host
         self.server_port = server_port
 
-    def startNeuron(self, portnumber):
-	self.neuron = Neuron(('',portnumber))
-	self.neuron.start()
-
     def start(self, gmail_account, password):
         jid=xmpp.JID(gmail_account)
         user, server, password = jid.getNode(), jid.getDomain(), password
@@ -227,6 +223,5 @@ class XMPPRobot:
 ############################################################################################################################
 if __name__ == "__main__":
     bot = XMPPRobot()
-    bot.startNeuron(23301)
     bot.setState('available', "PyXMPPRobot")
     bot.start("littlepi@jabber.org", "Dorisaac")
